@@ -1,1 +1,1 @@
-# Job-recommender-via-natural-language-processing
+# Job recommender via natural language processing
