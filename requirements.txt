@@ -6,7 +6,7 @@ streamlit==1.5.0
 scikit-learn==1.0.2
 implicit==0.6.0
 nltk==3.7
-re==2.2.1
+re
 selenium==4.3.0
 selenium.webdriver==4.3.0
 spacy==3.4.0
