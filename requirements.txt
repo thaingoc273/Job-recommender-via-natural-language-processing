@@ -9,3 +9,4 @@ nltk==3.7
 regex
 selenium==4.3.0
 spacy==3.4.0
+deep_translator
