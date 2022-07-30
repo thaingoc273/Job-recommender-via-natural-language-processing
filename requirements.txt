@@ -8,5 +8,5 @@ implicit==0.6.0
 nltk==3.7
 regex
 selenium==4.3.0
-selenium.webdriver==4.3.0
+selenium.webdriver
 spacy==3.4.0
