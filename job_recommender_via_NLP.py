@@ -38,6 +38,8 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from nltk.corpus import stopwords
 
+import streamlit as st
+
 def main():
     #(link, movie, rating, tag, rating_pivot, rating_agg) = load_data()
    
