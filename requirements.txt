@@ -11,3 +11,4 @@ selenium==4.3.0
 spacy==3.4.0
 deep_translator
 langdetect
+wordcloud
