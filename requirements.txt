@@ -12,3 +12,4 @@ spacy==3.4.0
 deep_translator
 langdetect
 wordcloud
+PyPDF2

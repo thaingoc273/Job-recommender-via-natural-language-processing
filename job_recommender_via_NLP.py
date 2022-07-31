@@ -40,11 +40,18 @@ from nltk.corpus import stopwords
 
 import streamlit as st
 
+import PyPDF2
+
 def main():
     #(link, movie, rating, tag, rating_pivot, rating_agg) = load_data()
    
     st.title("Job Recommender via Natural Language Processing")
-    
+    uploaded_file = st.file_uploader('Choose your .pdf file', type="pdf")
+    if uploaded_file is not None:        
+        CV_pdf = PyPDF2.PdfFileReader(uploaded_file)
+        pageObj = CV_pdf.getPage(0)
+        CV_text = pageObj.extractText()
+        st.text_area(CV_text)
 
 if __name__ == "__main__":
     main()
