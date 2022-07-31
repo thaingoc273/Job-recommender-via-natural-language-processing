@@ -47,22 +47,22 @@ import docx2txt
 import pdfplumber
 
 def main():
-    #(link, movie, rating, tag, rating_pivot, rating_agg) = load_data()
    
     st.title("Job Recommender via Natural Language Processing")
-    uploaded_file = st.file_uploader('Please upload CV in .pdf or .doc, .docx file', type=["pdf","docx", "doc"])
+    uploaded_file = st.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
     if uploaded_file is not None:
         if (uploaded_file.type=='application/pdf'):
             CV_pdf = pdfplumber.open(uploaded_file)
             pageObj = CV_pdf.pages[0]
             CV_text = pageObj.extract_text()
             st.text_area(CV_text)
-        elif (uploaded_file.type=='application/vnd.openxmlformats-officedocument.wordprocessingml.document'):
+        elif ((uploaded_file.type=='application/vnd.openxmlformats-officedocument.wordprocessingml.document')|(uploaded_file.type=='application/msword')):
             # CV_text = textract.process(uploaded_file)
             # CV_text = CV_text.decode("utf-8") 
             # st.text_area(CV_text)            
             CV_text = docx2txt.process(uploaded_file)
             st.text_area(CV_text)
+        #st.text(uploaded_file.type)
 
 if __name__ == "__main__":
     main()
