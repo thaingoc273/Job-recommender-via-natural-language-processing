@@ -13,3 +13,5 @@ deep_translator
 langdetect
 wordcloud
 PyPDF2
+docx2txt
+pdfplumber==0.5.28

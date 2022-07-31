@@ -41,17 +41,28 @@ from nltk.corpus import stopwords
 import streamlit as st
 
 import PyPDF2
+from io import StringIO
+import textract
+import docx2txt
+import pdfplumber
 
 def main():
     #(link, movie, rating, tag, rating_pivot, rating_agg) = load_data()
    
     st.title("Job Recommender via Natural Language Processing")
-    uploaded_file = st.file_uploader('Choose your .pdf file', type="pdf")
-    if uploaded_file is not None:        
-        CV_pdf = PyPDF2.PdfFileReader(uploaded_file)
-        pageObj = CV_pdf.getPage(0)
-        CV_text = pageObj.extractText()
-        st.text_area(CV_text)
+    uploaded_file = st.file_uploader('Please upload CV in .pdf or .doc, .docx file', type=["pdf","docx", "doc"])
+    if uploaded_file is not None:
+        if (uploaded_file.type=='application/pdf'):
+            CV_pdf = pdfplumber.open(uploaded_file)
+            pageObj = CV_pdf.pages[0]
+            CV_text = pageObj.extract_text()
+            st.text_area(CV_text)
+        elif (uploaded_file.type=='application/vnd.openxmlformats-officedocument.wordprocessingml.document'):
+            # CV_text = textract.process(uploaded_file)
+            # CV_text = CV_text.decode("utf-8") 
+            # st.text_area(CV_text)            
+            CV_text = docx2txt.process(uploaded_file)
+            st.text_area(CV_text)
 
 if __name__ == "__main__":
     main()
