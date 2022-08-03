@@ -17,3 +17,4 @@ docx2txt
 pdfplumber==0.5.28
 textract
 skillNer
+pickle
