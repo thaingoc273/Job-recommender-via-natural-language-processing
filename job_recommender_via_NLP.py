@@ -55,21 +55,27 @@ from skillNer.general_params import SKILL_DB
 # import skill extractor
 from skillNer.skill_extractor_class import SkillExtractor
 
+from sklearn.metrics.pairwise import cosine_similarity
+
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.decomposition import NMF, MiniBatchNMF, LatentDirichletAllocation
+
 def main():   
     st.title("Job Recommender via Natural Language Processing")
     
-    upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
-    if upload_file is not None:
-        CV_text = load_file(upload_file, upload_file.type)
-        #st.text_area(CV_text)
-        #skill_extractor = pickle.load(open('model/skill_extractor.pkl','rb'))
-        
-        
-        CV_skill = skill_extraction_one(CV_text)
-        CV_skill_text = ', '.join(CV_skill)
-        st.sidebar.title('Your skills')
-        st.sidebar.text_area(CV_skill_text)
-        
+    with st.form('Upload CV'):
+        upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
+        if upload_file is not None:
+            CV_text = load_file(upload_file, upload_file.type)
+            #st.text_area(CV_text)
+            #skill_extractor = pickle.load(open('model/skill_extractor.pkl','rb'))
+            
+            CV_skill = skill_extraction_one(CV_text)
+            CV_skill_text = ', '.join(CV_skill)
+            st.sidebar.title('Your skills')
+            st.sidebar.text_area(CV_skill_text)
+
+
 def load_file(upload_file, typ):
     if (typ != 'application/pdf') & (typ != 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'):
         st.error('File is not in correct format. Please upload again')
@@ -91,7 +97,7 @@ def skill_extraction_one(text):
     df_skill_ngram = pd.json_normalize(skill_extractor.annotate(text)['results']['ngram_scored'])
     df_skill_full_match = pd.json_normalize(skill_extractor.annotate(text)['results']['full_matches'])
     df_skill = pd.concat([df_skill_ngram, df_skill_full_match])
-    #df_skill['doc_node_value'].drop_duplicates(inplace=True)
+    
     return df_skill['doc_node_value'].unique().tolist()
 
 
@@ -103,5 +109,4 @@ def skill_extractor_model():
 if __name__ == "__main__":
     nlp = spacy.load("en_core_web_sm")
     skill_extractor = SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
-    # skill_extractor = skill_extractor_model()
     main()
