@@ -46,10 +46,10 @@ import textract
 import docx2txt
 import pdfplumber
 
-def main():
-   
+def main():   
     st.title("Job Recommender via Natural Language Processing")
-    uploaded_file = st.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
+    
+    uploaded_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
     if uploaded_file is not None:
         if (uploaded_file.type=='application/pdf'):
             CV_pdf = pdfplumber.open(uploaded_file)
