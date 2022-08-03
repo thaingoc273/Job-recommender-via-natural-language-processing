@@ -58,7 +58,7 @@ from skillNer.skill_extractor_class import SkillExtractor
 from sklearn.metrics.pairwise import cosine_similarity
 
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from sklearn.decomposition import NMF, MiniBatchNMF, LatentDirichletAllocation
+from sklearn.decomposition import NMF, LatentDirichletAllocation
 
 def main():   
     st.title("Job Recommender via Natural Language Processing")
