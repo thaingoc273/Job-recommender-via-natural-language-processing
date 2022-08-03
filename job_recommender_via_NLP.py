@@ -54,11 +54,13 @@ def main():
     if upload_file is not None:
         CV_text = load_file(upload_file, upload_file.type)
         #st.text_area(CV_text)
-    #skill_extractor = pickle.load(open('model/skill_extractor.pkl','rb'))
-        CV_skill = skill_extraction_one(CV_text)
-        CV_skill_text = ', '.join(CV_skill)
-        st.sidebar.title('Your skills')
-        st.sidebar.text_area(CV_skill_text)
+        #skill_extractor = pickle.load(open('model/skill_extractor.pkl','rb'))
+        
+        
+        # CV_skill = skill_extraction_one(CV_text)
+        # CV_skill_text = ', '.join(CV_skill)
+        # st.sidebar.title('Your skills')
+        # st.sidebar.text_area(CV_skill_text)
         
 def load_file(upload_file, typ):
     if (typ != 'application/pdf') & (typ != 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'):
@@ -85,5 +87,7 @@ def skill_extraction_one(text):
     return df_skill['doc_node_value'].unique().tolist()
 
 if __name__ == "__main__":
-    skill_extractor = pickle.load(open('model/skill_extractor.pkl','rb'))
+    #skill_extractor = pickle.load(open('model/skill_extractor.pkl','rb'))
+    skill_extractor = pickle.load(open('model/als_model.pkl','rb'))
+    als_model
     main()
