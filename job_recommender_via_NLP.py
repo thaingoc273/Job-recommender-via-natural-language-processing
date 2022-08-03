@@ -89,5 +89,4 @@ def skill_extraction_one(text):
 if __name__ == "__main__":
     #skill_extractor = pickle.load(open('model/skill_extractor.pkl','rb'))
     skill_extractor = pickle.load(open('model/als_model.pkl','rb'))
-    als_model
     main()
