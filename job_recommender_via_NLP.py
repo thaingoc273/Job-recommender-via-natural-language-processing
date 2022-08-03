@@ -87,6 +87,7 @@ def skill_extraction_one(text):
     return df_skill['doc_node_value'].unique().tolist()
 
 if __name__ == "__main__":
-    skill_extractor = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
+    nlp = spacy.load("en_core_web_sm")
+    # skill_extractor = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
     # skill_extractor = pickle.load(open('model/als_model.pkl','rb'))
     main()
