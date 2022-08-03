@@ -67,8 +67,6 @@ def main():
         upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
         if upload_file is not None:
             CV_text = load_file(upload_file, upload_file.type)
-            #st.text_area(CV_text)
-            #skill_extractor = pickle.load(open('model/skill_extractor.pkl','rb'))
             
             CV_skill = skill_extraction_one(CV_text)
             CV_skill_text = ', '.join(CV_skill)
