@@ -87,6 +87,11 @@ def skill_extraction_one(text):
     return df_skill['doc_node_value'].unique().tolist()
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     skill_extractor = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
     # skill_extractor = pickle.load(open('model/als_model.pkl','rb'))
+=======
+    #skill_extractor = pickle.load(open('model/skill_extractor.pkl','rb'))
+    skill_extractor = pickle.load(open('model/als_model.pkl','rb'))
+>>>>>>> 23310014509acfe8186e96d664323eab3b61791d
     main()
