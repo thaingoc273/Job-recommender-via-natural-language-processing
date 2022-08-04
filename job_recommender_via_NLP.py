@@ -60,6 +60,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.decomposition import NMF, LatentDirichletAllocation
 
+from sklearn.neighbors import NearestNeighbors
+
 def main():   
     st.title("Job Recommender via Natural Language Processing")
     
@@ -73,7 +75,10 @@ def main():
         # st.sidebar.title('Your skills')
         st.sidebar.text_area('Your Skill', cv_skill_text)
 
-        top_job =  cosin_similarity(df_job, cv_skill_text, number)
+        # top_job =  cosin_similarity(df_job, cv_skill_text, number)
+        
+        top_job =  KNN_similartity(df_job, cv_skill_text, number)
+        
         st.write(top_job)
             #st.text_area(top_job)
 
@@ -121,11 +126,31 @@ def cosin_similarity(df, cv_skill_text, number):
     
     return df.sort_values(by='cosin_similarity', ascending=False).head(number)
 
+def KNN_similartity(df, cv_skill_text, number):
+    df = df.reset_index()
+    tfidf_skill = tfidf_model.transform([cv_skill_text])
+    lst_job_description_en = df['skill_extraction'].tolist()
+    tfidf_job_description = tfidf_model.transform(lst_job_description_en)
+    
+    nearest_neighbor = NearestNeighbors(n_neighbors=number)
+    nearest_neighbor.fit(tfidf_job_description)
+    result_KNN = nearest_neighbor.kneighbors(tfidf_skill)
+    lst_index = np.array(result_KNN[1]).ravel().tolist()
+    
+    return df.loc[lst_index, :]
+
+def person_corr_similarity(df, cv_skill_text, number):
+    tfidf_skill = tfidf_model.transform([cv_skill_text])
+    lst_job_description_en = df['skill_extraction'].tolist()
+    tfidf_job_description = tfidf_model.transform(lst_job_description_en)
+    
+    
+    
 if __name__ == "__main__":
     number = 15
     nlp = spacy.load("en_core_web_sm")
     skill_extractor = SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
-    #model = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
-    tfidf_model = pickle.load(open('model/tfidf_model.pkl','rb'))
-    df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web.csv')
-    main()
+    model = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
+    # tfidf_model = pickle.load(open('model/tfidf_model.pkl','rb'))
+    # df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web.csv')
+    # main()
