@@ -71,7 +71,7 @@ def main():
             CV_skill = skill_extraction_one(CV_text)
             CV_skill_text = ', '.join(CV_skill)
             st.sidebar.title('Your skills')
-            st.sidebar.text_area(CV_skill_text)
+            st.sidebar.text_area('Your Skill', CV_skill_text)
 
 
 def load_file(upload_file, typ):
