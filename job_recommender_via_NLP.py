@@ -61,6 +61,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.decomposition import NMF, LatentDirichletAllocation
 
 from sklearn.neighbors import NearestNeighbors
+from scipy.stats.stats import pearsonr   
 
 def main():   
     st.title("Job Recommender via Natural Language Processing")
@@ -73,15 +74,38 @@ def main():
         cv_skill = skill_extraction_one(cv_text)
         cv_skill_text = ', '.join(cv_skill)
         # st.sidebar.title('Your skills')
-        st.sidebar.text_area('Your Skill', cv_skill_text)
+        
+        st.sidebar.markdown("## Choose language")
+        language = st.sidebar.selectbox("", ["English", "German", "Both"])
+        
+        if (language=='English'):
+            df = df_job_en.copy()            
+        elif (language=='Geman'):
+            df = df_job_de.copy()
+        else:
+            df = df_job.copy()
+        
+        st.sidebar.markdown("## Choose type of algorithms")
+        algorithm = st.sidebar.selectbox("", ["Cosine", "KNN", "Pearson"])
+        
+        if (algorithm=='Cosine'):
+            top_job =  cosin_similarity(df, cv_skill_text, number)
+        elif (algorithm=='KNN'):
+            top_job = KNN_similartity(df, cv_skill_text, number)
+        else:
+            top_job =  person_corr_similarity(df, cv_skill_text, number)
 
-        # top_job =  cosin_similarity(df_job, cv_skill_text, number)
+        # top_job =  cosin_similarity(df_job_en, cv_skill_text, number)
         
-        top_job =  KNN_similartity(df_job, cv_skill_text, number)
+        # top_job =  KNN_similartity(df_job_en, cv_skill_text, number)
         
+        # top_job =  person_corr_similarity(df_job_en, cv_skill_text, number)
+        
+        st.sidebar.text_area('Your skill', cv_skill_text)
         st.write(top_job)
             #st.text_area(top_job)
-
+            
+@st.cache
 def load_file(upload_file, typ):
     if (typ != 'application/pdf') & (typ != 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'):
         st.error('File is not in correct format. Please upload again')
@@ -114,6 +138,7 @@ def skill_extractor_model():
 
 def cosin_similarity(df, cv_skill_text, number):
     # Calculate tfidf
+    df = df.reset_index()
     tfidf_skill = tfidf_model.transform([cv_skill_text])
     lst_job_description_en = df['skill_extraction'].tolist()
     tfidf_job_description = tfidf_model.transform(lst_job_description_en)
@@ -140,11 +165,20 @@ def KNN_similartity(df, cv_skill_text, number):
     return df.loc[lst_index, :]
 
 def person_corr_similarity(df, cv_skill_text, number):
+    df = df.reset_index()
     tfidf_skill = tfidf_model.transform([cv_skill_text])
     lst_job_description_en = df['skill_extraction'].tolist()
     tfidf_job_description = tfidf_model.transform(lst_job_description_en)
     
+    tfidf_skill_dense = tfidf_skill.todense().tolist()[0]
     
+    lst_pearson_corr = []
+    for job_description in tfidf_job_description:
+        job_description_dense = job_description.todense().tolist()[0]
+        lst_pearson_corr.append(pearsonr(tfidf_skill_dense,job_description_dense)[0])
+    df['pearson_corr'] = lst_pearson_corr
+    
+    return df.sort_values(by='pearson_corr', ascending=False).head(number)
     
 if __name__ == "__main__":
     number = 15
@@ -153,4 +187,6 @@ if __name__ == "__main__":
     # model = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
     tfidf_model = pickle.load(open('model/tfidf_model.pkl','rb'))
     df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web.csv')
+    df_job_en = df_job.loc[df_job['language']=='en'].copy()
+    df_job_de = df_job.loc[df_job['language']=='de'].copy()
     main()
