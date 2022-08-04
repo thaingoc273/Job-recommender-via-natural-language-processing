@@ -104,7 +104,10 @@ def skill_extractor_model():
     skill_extractor = SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
     return skill_extractor
 
+
+
 if __name__ == "__main__":
     nlp = spacy.load("en_core_web_sm")
     skill_extractor = SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
+    model = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
     main()
