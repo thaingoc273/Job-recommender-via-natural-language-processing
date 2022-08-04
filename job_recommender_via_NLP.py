@@ -30,7 +30,7 @@ import os
 
 import pandas as pd
 from deep_translator import GoogleTranslator #, DeeplTranslator, PonsTranslator
-from langdetect import detect  
+from langdetect import detect   ## use for language detection
 
 import time
 
@@ -63,6 +63,11 @@ from sklearn.decomposition import NMF, LatentDirichletAllocation
 from sklearn.neighbors import NearestNeighbors
 from scipy.stats.stats import pearsonr   
 
+import sys
+sys.path.insert(0, 'ultility') # Add path ultility for add functions
+import language
+from language import google_translate_to_en, google_translate_to_de, job_description_translation
+
 def main():   
 #     st.title("Job Recommender via Natural Language Processing")
     
@@ -80,7 +85,7 @@ def main():
         
         if (language=='English'):
             df = df_job_en.copy()            
-        elif (language=='Geman'):
+        elif (language=='German'):
             df = df_job_de.copy()
         else:
             df = df_job.copy()
@@ -102,6 +107,7 @@ def main():
         # top_job =  person_corr_similarity(df_job_en, cv_skill_text, number)
         
         st.sidebar.text_area('Your skill', cv_skill_text)
+        # st.sidebar.text( cv_skill_text)
         st.write(top_job)
             #st.text_area(top_job)
             
@@ -131,6 +137,18 @@ def skill_extraction_one(text):
     
     return df_skill['doc_node_value'].unique().tolist()
 
+
+# @st.cache
+# def load_data():
+#     #number = 15
+#     nlp = spacy.load("en_core_web_sm")
+#     skill_extractor = SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
+#     # model = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
+#     # tfidf_model = pickle.load(open('model/tfidf_model.pkl','rb'))
+#     # df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web.csv')
+#     # df_job_en = df_job.loc[df_job['language']=='en'].copy()
+#     # df_job_de = df_job.loc[df_job['language']=='de'].copy()
+#     return skill_extractor
 
 def skill_extractor_model():
     nlp = spacy.load("en_core_web_md")
@@ -191,13 +209,29 @@ if __name__ == "__main__":
     df_job_en = df_job.loc[df_job['language']=='en'].copy()
     df_job_de = df_job.loc[df_job['language']=='de'].copy()
     
+        
     st.title("Job Recommender via Natural Language Processing")
     
+    
+    # skill_extractor = load_data()
+    # tfidf_model = pickle.load(open('model/tfidf_model.pkl','rb'))
+    # df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web.csv')
+    # df_job_en = df_job.loc[df_job['language']=='en'].copy()
+    # df_job_de = df_job.loc[df_job['language']=='de'].copy()
     # with st.form('Upload CV'):
+    
     upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
     if upload_file is not None:
         cv_text = load_file(upload_file, upload_file.type)
-
+        lang_detect = detect(cv_text)
+        if (lang_detect!='en'):
+            cv_text = google_translate_to_en(cv_text, lang_detect)            
+        
+        # st.text(lang_detect)
+        # cv_de = google_translate_to_de(cv_text, lang_detect)
+        # st.text(cv_de)
+        
         cv_skill = skill_extraction_one(cv_text)
         cv_skill_text = ', '.join(cv_skill)
+        #st.text(cv_skill_text)
         main()
