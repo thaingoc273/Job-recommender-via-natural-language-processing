@@ -150,7 +150,7 @@ if __name__ == "__main__":
     number = 15
     nlp = spacy.load("en_core_web_sm")
     skill_extractor = SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
-    model = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
-    # tfidf_model = pickle.load(open('model/tfidf_model.pkl','rb'))
-    # df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web.csv')
-    # main()
+    # model = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
+    tfidf_model = pickle.load(open('model/tfidf_model.pkl','rb'))
+    df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web.csv')
+    main()
