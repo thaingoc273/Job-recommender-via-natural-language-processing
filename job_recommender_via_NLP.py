@@ -63,16 +63,19 @@ from sklearn.decomposition import NMF, LatentDirichletAllocation
 def main():   
     st.title("Job Recommender via Natural Language Processing")
     
-    with st.form('Upload CV'):
-        upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
-        if upload_file is not None:
-            CV_text = load_file(upload_file, upload_file.type)
-            
-            CV_skill = skill_extraction_one(CV_text)
-            CV_skill_text = ', '.join(CV_skill)
-            st.sidebar.title('Your skills')
-            st.sidebar.text_area('Your Skill', CV_skill_text)
+    # with st.form('Upload CV'):
+    upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
+    if upload_file is not None:
+        cv_text = load_file(upload_file, upload_file.type)
 
+        cv_skill = skill_extraction_one(cv_text)
+        cv_skill_text = ', '.join(cv_skill)
+        # st.sidebar.title('Your skills')
+        st.sidebar.text_area('Your Skill', cv_skill_text)
+
+        top_job =  cosin_similarity(df_job, cv_skill_text, number)
+        st.write(top_job)
+            #st.text_area(top_job)
 
 def load_file(upload_file, typ):
     if (typ != 'application/pdf') & (typ != 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'):
@@ -104,13 +107,25 @@ def skill_extractor_model():
     skill_extractor = SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
     return skill_extractor
 
-def cosin_similarity(df, text):
-    tfidf_vectorizer = TfidfVectorizer(max_df=1.0, min_df=0.01, stop_words="english")
+def cosin_similarity(df, cv_skill_text, number):
+    # Calculate tfidf
+    tfidf_skill = tfidf_model.transform([cv_skill_text])
+    lst_job_description_en = df['skill_extraction'].tolist()
+    tfidf_job_description = tfidf_model.transform(lst_job_description_en)
     
+    # Calculate similarity
+    cosin_sim = cosine_similarity(tfidf_skill, tfidf_job_description)
+    
+    df['cosin_similarity'] = np.array(cosin_sim).ravel()
+    
+    
+    return df.sort_values(by='cosin_similarity', ascending=False).head(number)
 
 if __name__ == "__main__":
+    number = 15
     nlp = spacy.load("en_core_web_sm")
     skill_extractor = SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
     #model = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
-    model = pickle.load(open('model/tfidf_model.pkl','rb'))
+    tfidf_model = pickle.load(open('model/tfidf_model.pkl','rb'))
+    df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web.csv')
     main()
