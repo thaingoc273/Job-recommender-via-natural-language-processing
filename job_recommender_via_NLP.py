@@ -64,15 +64,15 @@ from sklearn.neighbors import NearestNeighbors
 from scipy.stats.stats import pearsonr   
 
 def main():   
-    st.title("Job Recommender via Natural Language Processing")
+#     st.title("Job Recommender via Natural Language Processing")
     
-    # with st.form('Upload CV'):
-    upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
-    if upload_file is not None:
-        cv_text = load_file(upload_file, upload_file.type)
+#     # with st.form('Upload CV'):
+#     upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
+#     if upload_file is not None:
+#         cv_text = load_file(upload_file, upload_file.type)
 
-        cv_skill = skill_extraction_one(cv_text)
-        cv_skill_text = ', '.join(cv_skill)
+#         cv_skill = skill_extraction_one(cv_text)
+#         cv_skill_text = ', '.join(cv_skill)
         # st.sidebar.title('Your skills')
         
         st.sidebar.markdown("## Choose language")
@@ -122,7 +122,8 @@ def load_file(upload_file, typ):
     elif (typ == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'):
         CV_text = docx2txt.process(upload_file)
         return CV_text
-    
+
+@st.cache    
 def skill_extraction_one(text):
     df_skill_ngram = pd.json_normalize(skill_extractor.annotate(text)['results']['ngram_scored'])
     df_skill_full_match = pd.json_normalize(skill_extractor.annotate(text)['results']['full_matches'])
@@ -189,4 +190,14 @@ if __name__ == "__main__":
     df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web.csv')
     df_job_en = df_job.loc[df_job['language']=='en'].copy()
     df_job_de = df_job.loc[df_job['language']=='de'].copy()
-    main()
+    
+    st.title("Job Recommender via Natural Language Processing")
+    
+    # with st.form('Upload CV'):
+    upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
+    if upload_file is not None:
+        cv_text = load_file(upload_file, upload_file.type)
+
+        cv_skill = skill_extraction_one(cv_text)
+        cv_skill_text = ', '.join(cv_skill)
+        main()
