@@ -93,7 +93,7 @@ def main():
         
         st.sidebar.text_area('Your skill', cv_skill_text)
         top_job = top_job.reset_index()
-        top_job_link_format = top_job[['position', 'company_name', 'location', 'link']].style.format({'link': make_clickable})
+        top_job_link_format = top_job[['position', 'company_name', 'location', 'skill_extraction' ,'link']].style.format({'link': make_clickable})
         top_job_link_format = top_job_link_format.to_html(escape=False)
         st.write(top_job_link_format, unsafe_allow_html=True)
 
@@ -186,7 +186,7 @@ if __name__ == "__main__":
     df_job_en = df_job.loc[df_job['language']=='en'].copy()
     df_job_de = df_job.loc[df_job['language']=='de'].copy()
     
-        
+    st.set_page_config(layout="wide")    
     st.title("Job Recommender via Natural Language Processing")
   
     upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
