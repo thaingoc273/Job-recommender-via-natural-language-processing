@@ -182,7 +182,7 @@ if __name__ == "__main__":
     skill_extractor = SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
     # model = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
     tfidf_model = pickle.load(open('model/tfidf_model.pkl','rb'))
-    df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web.csv')
+    df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web_v1.csv')
     df_job_en = df_job.loc[df_job['language']=='en'].copy()
     df_job_de = df_job.loc[df_job['language']=='de'].copy()
     
