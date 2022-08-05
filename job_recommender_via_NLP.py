@@ -93,9 +93,12 @@ def main():
         
         st.sidebar.text_area('Your skill', cv_skill_text)
         top_job = top_job.reset_index()
-        top_job_link_format = top_job[['position', 'company_name', 'location', 'skill_extraction' ,'link']].style.format({'link': make_clickable})
+        top_job.rename(columns={'position':'Position', 'company_name':'Company', 'location':'Location', 'skill_extraction':'Skill','link':'Link'}, inplace = True)
+        #top_job_link_format = top_job[['position', 'company_name', 'location', 'skill_extraction' ,'link']].style.format({'link': make_clickable})
+        top_job_link_format = top_job[['Position', 'Company', 'Location', 'Link']].style.format({'Link': make_clickable})
         top_job_link_format = top_job_link_format.to_html(escape=False)
         st.write(top_job_link_format, unsafe_allow_html=True)
+        
 
 def make_clickable(val):
     return f'<a target="_blank" href="{val}">Link to apply</a>'
@@ -187,17 +190,29 @@ if __name__ == "__main__":
     df_job_de = df_job.loc[df_job['language']=='de'].copy()
     
     st.set_page_config(layout="wide")    
-    st.title("Job Recommender via Natural Language Processing")
-  
+    # st.title("Job Recommender via Natural Language Processing")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.image('picture/logo_WBS.png')
+    with col2:
+        st.title('For a Better World')
     upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
     
-    if upload_file is not None:
-        cv_text = load_file(upload_file, upload_file.type)
-        lang_detect = detect(cv_text)
-        if (lang_detect!='en'):
-            cv_text = google_translate_to_en(cv_text, lang_detect)            
-        
-        cv_skill = skill_extraction_one(cv_text)
-        cv_skill_text = ', '.join(cv_skill)
-        
-        main()
+    
+    if (st.sidebar.checkbox("Skill Statistics")):
+        col3, col4 = st.columns(2)
+        with col3:
+            st.image('picture/da_skill.png')
+        with col4:
+            st.image('picture/ds_skill.png')
+    else:        
+        if upload_file is not None:
+            cv_text = load_file(upload_file, upload_file.type)
+            lang_detect = detect(cv_text)
+            if (lang_detect!='en'):
+                cv_text = google_translate_to_en(cv_text, lang_detect)            
+
+            cv_skill = skill_extraction_one(cv_text)
+            cv_skill_text = ', '.join(cv_skill)
+
+            main()
