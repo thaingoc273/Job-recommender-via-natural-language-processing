@@ -68,18 +68,8 @@ sys.path.insert(0, 'ultility') # Add path ultility for add functions
 import language
 from language import google_translate_to_en, google_translate_to_de, job_description_translation
 
-def main():   
-#     st.title("Job Recommender via Natural Language Processing")
-    
-#     # with st.form('Upload CV'):
-#     upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
-#     if upload_file is not None:
-#         cv_text = load_file(upload_file, upload_file.type)
-
-#         cv_skill = skill_extraction_one(cv_text)
-#         cv_skill_text = ', '.join(cv_skill)
-        # st.sidebar.title('Your skills')
-        
+def main(): 
+       
         st.sidebar.markdown("## Choose language")
         language = st.sidebar.selectbox("", ["English", "German", "Both"])
         
@@ -99,17 +89,16 @@ def main():
             top_job = KNN_similartity(df, cv_skill_text, number)
         else:
             top_job =  person_corr_similarity(df, cv_skill_text, number)
-
-        # top_job =  cosin_similarity(df_job_en, cv_skill_text, number)
-        
-        # top_job =  KNN_similartity(df_job_en, cv_skill_text, number)
-        
-        # top_job =  person_corr_similarity(df_job_en, cv_skill_text, number)
+      
         
         st.sidebar.text_area('Your skill', cv_skill_text)
-        # st.sidebar.text( cv_skill_text)
-        st.write(top_job)
-            #st.text_area(top_job)
+        top_job = top_job.reset_index()
+        top_job_link_format = top_job[['position', 'company_name', 'location', 'link']].style.format({'link': make_clickable})
+        top_job_link_format = top_job_link_format.to_html(escape=False)
+        st.write(top_job_link_format, unsafe_allow_html=True)
+
+def make_clickable(val):
+    return f'<a target="_blank" href="{val}">Link to apply</a>'
             
 @st.cache
 def load_file(upload_file, typ):
@@ -137,18 +126,6 @@ def skill_extraction_one(text):
     
     return df_skill['doc_node_value'].unique().tolist()
 
-
-# @st.cache
-# def load_data():
-#     #number = 15
-#     nlp = spacy.load("en_core_web_sm")
-#     skill_extractor = SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
-#     # model = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
-#     # tfidf_model = pickle.load(open('model/tfidf_model.pkl','rb'))
-#     # df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web.csv')
-#     # df_job_en = df_job.loc[df_job['language']=='en'].copy()
-#     # df_job_de = df_job.loc[df_job['language']=='de'].copy()
-#     return skill_extractor
 
 def skill_extractor_model():
     nlp = spacy.load("en_core_web_md")
@@ -211,27 +188,16 @@ if __name__ == "__main__":
     
         
     st.title("Job Recommender via Natural Language Processing")
-    
-    
-    # skill_extractor = load_data()
-    # tfidf_model = pickle.load(open('model/tfidf_model.pkl','rb'))
-    # df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web.csv')
-    # df_job_en = df_job.loc[df_job['language']=='en'].copy()
-    # df_job_de = df_job.loc[df_job['language']=='de'].copy()
-    # with st.form('Upload CV'):
-    
+  
     upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
+    
     if upload_file is not None:
         cv_text = load_file(upload_file, upload_file.type)
         lang_detect = detect(cv_text)
         if (lang_detect!='en'):
             cv_text = google_translate_to_en(cv_text, lang_detect)            
         
-        # st.text(lang_detect)
-        # cv_de = google_translate_to_de(cv_text, lang_detect)
-        # st.text(cv_de)
-        
         cv_skill = skill_extraction_one(cv_text)
         cv_skill_text = ', '.join(cv_skill)
-        #st.text(cv_skill_text)
+        
         main()
