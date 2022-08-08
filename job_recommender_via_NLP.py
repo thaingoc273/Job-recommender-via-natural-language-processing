@@ -246,7 +246,7 @@ if __name__ == "__main__":
     
     
     if (st.sidebar.checkbox("Statistics")):
-        st.title('1. Technical skils')
+        st.title('1. Technical skills')
         col3, col4 = st.columns(2)
         with col3:
             st.image('picture/ds_tech_skill.png')
