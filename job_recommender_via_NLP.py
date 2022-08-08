@@ -160,7 +160,7 @@ def skill_extraction_one(text):
 
 
 def skill_extractor_model():
-    nlp = spacy.load("en_core_web_sm")
+    nlp = spacy.load("en_core_web_md")
     skill_extractor = SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
     return skill_extractor
 
@@ -210,7 +210,7 @@ def person_corr_similarity(df, cv_skill_text, number):
 
 @st.cache
 def load_dataframe():
-    df_job = pd.read_csv('data/skill_extraction_Skiller_03.08_final_web_v1.csv')
+    df_job = pd.read_csv('data/skill_extraction_Skiller_08.08_final_web.csv')
     df_job_en = df_job.loc[df_job['language']=='en'].copy()
     df_job_de = df_job.loc[df_job['language']=='de'].copy()
     df_skill_data = pd.read_csv('data/skill_name.csv') # read all skills
