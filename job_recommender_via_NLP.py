@@ -226,7 +226,7 @@ if __name__ == "__main__":
     
     # model = pickle.load(open('model/skill_extractor_sm.pkl','rb'))
     
-    tfidf_model = pickle.load(open('model/tfidf_model.pkl','rb'))
+    tfidf_model = pickle.load(open('model/tfidf_model_0808.pkl','rb'))
     
     
     df_job, df_job_en, df_job_de, df_skill_data = load_dataframe()
