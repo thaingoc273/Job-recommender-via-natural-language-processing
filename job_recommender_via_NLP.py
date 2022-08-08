@@ -218,7 +218,7 @@ def load_dataframe():
 
     
 if __name__ == "__main__":
-    number = 15
+    number = 20
     st.set_page_config(layout="wide")
     
     nlp = spacy.load("en_core_web_sm")

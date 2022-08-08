@@ -57,3 +57,13 @@ def clean_text(text):
 
 def change_string_of_list_to_string(lst_tring):
     return ', '.join(literal_eval(lst_tring))
+
+def all_version_library(): # return all version of library for streamlit app
+    print('\n'.join(f'{m.__name__}=={m.__version__}' for m in globals().values() if getattr(m, '__version__', None)))
+    
+def skill_summary(df):
+    lst_skill = df.loc[df['skill_extraction'].isna()==False]['skill_extraction'].tolist()
+    lst_skill = [literal_eval(item) for item in lst_skill]
+    lst_skill_unpack = [item for sub_list in lst_skill for item in sub_list]
+    df_skill = pd.DataFrame(data=lst_skill_unpack, columns=['skill'])
+    return df_skill.groupby('skill')['skill'].count().sort_values(ascending=False)
