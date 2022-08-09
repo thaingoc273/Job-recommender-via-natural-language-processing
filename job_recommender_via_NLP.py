@@ -265,14 +265,28 @@ if __name__ == "__main__":
     if (check == False) & (upload_file is None):        
         st.image('picture/images.jpg')    
     elif (check == True):
-        st.title('1. Technical skills')
+        st.title('1. Languages in job description')
+        col3, col4 = st.columns(2)
+        with col3:
+            st.image('picture/language_ds.png')
+        with col4:
+            st.image('picture/language_da.png')
+        
+        st.title('2. Location and Job title')
+        col3, col4 = st.columns(2)
+        with col3:
+            st.image('picture/location.png')
+        with col4:
+            st.image('picture/job_title.png')
+        
+        st.title('3. Technical skills')
         col3, col4 = st.columns(2)
         with col3:
             st.image('picture/ds_tech_skill.png')
         with col4:
             st.image('picture/da_tech_skill.png')
         
-        st.title('2. Some soft skills')
+        st.title('4. Some soft skills')
         col3, col4 = st.columns(2)
         with col3:
             st.image('picture/ds_soft_skill.png')
