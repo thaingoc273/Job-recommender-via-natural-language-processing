@@ -72,8 +72,8 @@ import fitz
 
 def main(): 
        
-        st.sidebar.markdown("## Choose language")
-        language = st.sidebar.selectbox("", ["English", "German", "Both"])
+        #st.sidebar.markdown("## Choose language")
+        language = st.sidebar.selectbox("Language", ["English", "German", "Both"])
         
         if (language=='English'):
             df = df_job_en.copy()            
@@ -82,6 +82,20 @@ def main():
         else:
             df = df_job.copy()
         
+        #st.sidebar.markdown("## Choose city")
+        lst_city = list(df['location'].unique())
+        lst_city.insert(0, 'All cities')
+        city = st.sidebar.selectbox("City", lst_city)
+        if city != 'All cities':
+            df = df.loc[df['location'].str.contains(city)]       
+        
+        level = st.sidebar.selectbox('Type of level', ['Junior', 'Senior', 'Both'])
+        if (level == 'Senior'):
+            df = df.loc[df['position'].str.contains('(Senior|Lead|Experienced|Principal|Head|Director)', flags=re.IGNORECASE, regex=True)==True]
+        elif (level == 'Junior'):
+            df = df.loc[df['position'].str.contains('(Senior|Lead|Experienced|Principal|Head|Director)', flags=re.IGNORECASE, regex=True)==False]
+        
+            
 #         st.sidebar.markdown("## Choose type of algorithms")
 #         algorithm = st.sidebar.selectbox("", ["Cosine", "KNN", "Pearson"])
         
@@ -94,7 +108,8 @@ def main():
       
         top_job = cosin_similarity(df, cv_skill_text, number)
         
-        st.sidebar.text_area('Your skill', cv_skill_text)
+        # st.sidebar.text_area('Your skill', cv_skill_text)
+        
         top_job = top_job.reset_index()
         top_job.rename(columns={'position':'Position', 'company_name':'Company', 'location':'Location', 'skill_extraction':'Skill','link':'Link'}, inplace = True)
         #top_job_link_format = top_job[['position', 'company_name', 'location', 'skill_extraction' ,'link']].style.format({'link': make_clickable})
@@ -241,11 +256,15 @@ if __name__ == "__main__":
     with col1:
         st.image('picture/logo_WBS.png')
     with col2:
-        st.title('For a Better World')
+        st.title('For a Better World')    
+    
+    check = st.sidebar.checkbox("STATISTICS")
+    
     upload_file = st.sidebar.file_uploader('Please upload CV in .pdf or .docx file', type=["pdf","docx"])
     
-    
-    if (st.sidebar.checkbox("Statistics")):
+    if (check == False) & (upload_file is None):        
+        st.image('picture/images.jpg')    
+    elif (check == True):
         st.title('1. Technical skills')
         col3, col4 = st.columns(2)
         with col3:
@@ -259,8 +278,8 @@ if __name__ == "__main__":
             st.image('picture/ds_soft_skill.png')
         with col4:
             st.image('picture/da_soft_skill.png')
-    else:        
-        if upload_file is not None:
+            
+    elif (upload_file is not None):
             cv_text = load_file(upload_file, upload_file.type)            
             lang_detect = detect(cv_text)
             if (lang_detect!='en'):
