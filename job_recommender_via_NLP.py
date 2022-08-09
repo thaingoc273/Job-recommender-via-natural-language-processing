@@ -286,12 +286,12 @@ if __name__ == "__main__":
         with col4:
             st.image('picture/da_tech_skill.png')
         
-        st.title('4. Some soft skills')
-        col3, col4 = st.columns(2)
-        with col3:
-            st.image('picture/ds_soft_skill.png')
-        with col4:
-            st.image('picture/da_soft_skill.png')
+#         st.title('4. Some soft skills')
+#         col3, col4 = st.columns(2)
+#         with col3:
+#             st.image('picture/ds_soft_skill.png')
+#         with col4:
+#             st.image('picture/da_soft_skill.png')
             
     elif (upload_file is not None):
             cv_text = load_file(upload_file, upload_file.type)            
