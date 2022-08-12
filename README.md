@@ -31,4 +31,5 @@ Some libraries in natural language processing are used to extract information fr
 ## 4. Deploy model
 
 I use streamlit to depploy the app.
+
 [App Job recommender](https://thaingoc273-job-recommender-via--job-recommender-via-nlp-xatvqc.streamlitapp.com/)
