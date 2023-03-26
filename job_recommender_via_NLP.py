@@ -42,7 +42,7 @@ import streamlit as st
 
 import PyPDF2
 from io import StringIO
-import textract
+#import textract
 import docx2txt
 import pdfplumber
 import pickle
