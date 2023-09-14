@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome import service
 import time
 from selenium.webdriver.common.by import By
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 # import csv
 import pandas as pd
 from re import findall as re_findall
@@ -24,7 +24,7 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import pandas as pd
 import numpy as np
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 import glob
 import os
 
