@@ -17,7 +17,7 @@ docx2txt
 pdfplumber==0.5.28
 ipython
 skillNer
-requests
+requests==2.29.0
 spacy>=3.0.0,<4.0.0
 https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.4.0/en_core_web_md-3.4.0.tar.gz#egg=en_core_web_md
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.0/en_core_web_sm-3.4.0.tar.gz#egg=en_core_web_sm
